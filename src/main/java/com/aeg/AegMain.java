@@ -19,14 +19,14 @@ public class AegMain {
     // partner, a name or code or nothing. Nothing means all
     public static void main(String[] args) {
         log.info("we ae about to embark on a great journey;");
-        if(null ==  args || args.length < 1) {
+        if (null == args || args.length < 1) {
             log.error("You must pass a direction as the first parameter. As either both, in or out");
             System.exit(1);
         }
 
         String dirction = args[0];
         String name = null;
-        if(args.length < 2) {
+        if (args.length < 2) {
             log.info("calling transfer process for all partners");
         } else {
             name = args[1];
@@ -40,9 +40,9 @@ public class AegMain {
     }
 
     private void transfer(String direction, String name) {
-        if("in".equalsIgnoreCase(direction)) {
+        if ("in".equalsIgnoreCase(direction)) {
             transferIn(name);
-        } else if("out".equalsIgnoreCase(direction)) {
+        } else if ("out".equalsIgnoreCase(direction)) {
             transferOut(name);
         } else {
             transferIn(name);
@@ -66,6 +66,7 @@ public class AegMain {
 
 
     }
+
     private void transferOut(String name) {
 
         TransferService transferService = TransferService.create();

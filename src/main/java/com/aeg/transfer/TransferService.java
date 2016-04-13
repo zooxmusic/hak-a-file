@@ -35,7 +35,8 @@ public class TransferService {
         return new TransferService();
     }
 
-    private TransferService() { }
+    private TransferService() {
+    }
 
     public void outbound() throws IOException, URISyntaxException {
         outbound(null);
@@ -59,7 +60,7 @@ public class TransferService {
 
                 try {
                     outbound(conn, localDir, pattern, remoteDir);
-                }catch(Exception e) {
+                } catch (Exception e) {
                     log.error(e.getMessage(), e);
                     MailMan.deliver();
                 }
@@ -70,34 +71,43 @@ public class TransferService {
     private void outbound(final Connection connection, final String localDir, final String filter, final String remoteDir) throws SftpException, IOException, JSchException, InterruptedException {
 
         try {
-            log.info("<<<   reading INSIDE outbound: " );
+            log.info("<<<   reading INSIDE outbound: ");
             log.info("<<<   LOCAL DIR: " + localDir);
             log.info("<<<   REMOTE DIR: " + remoteDir);
             log.info("<<<   FILTER: " + filter);
 
             connect(connection);
 
+            boolean bFilter = (null != filter || "".equalsIgnoreCase(filter.trim()));
+
             String tmpRemote = remoteDir;
-            if(!tmpRemote.endsWith("/")) {
+            if (!tmpRemote.endsWith("/")) {
                 tmpRemote += "/";
             }
             channelSftp.cd(tmpRemote);
 
             File dir = new File(localDir);
-            if(!dir.exists()) {
+            if (!dir.exists()) {
                 dir.mkdirs();
             }
-            File[] files = dir.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    if (name.endsWith(filter)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            });
+            File[] files = null;
+            if(bFilter) {
 
-            if(null == files) {
+                files = dir.listFiles(new FilenameFilter() {
+                    public boolean accept(File dir, String name) {
+                        if (name.endsWith(filter)) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                });
+
+            } else {
+                files = dir.listFiles();
+            }
+
+            if (null == files) {
                 String message = String.format("Local directory [%s] was not found", localDir);
                 log.error(message);
                 throw new FileNotFoundException(message);
@@ -115,19 +125,19 @@ public class TransferService {
                 fis.close();
             }
 
-            for(String fileToRename : toRename) {
+            for (String fileToRename : toRename) {
                 try {
                     rename(Paths.get(fileToRename));
-                }catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     String message = String.format("Failed to rename local file [%s]", fileToRename);
                     log.error(message);
                 }
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw e;
-        }finally {
+        } finally {
             cleanup();
         }
     }
@@ -142,15 +152,16 @@ public class TransferService {
     }
 
     private List<Partner> getPartner(String name) throws IOException, URISyntaxException {
-        if(null == name || "".equalsIgnoreCase(name.trim())) return PartnerHolder.getInstance().getPartnerList();
+        if (null == name || "".equalsIgnoreCase(name.trim())) return PartnerHolder.getInstance().getPartnerList();
         List<Partner> partners = new ArrayList<Partner>();
 
         Partner partner = PartnerHolder.getInstance().find(name);
-        if(null != partner) {
+        if (null != partner) {
             partners.add(partner);
         }
         return partners;
     }
+
     private void rename(Path file) throws IOException {
         String newName = String.format("%s%s", file.getFileName().toString(), COMPLETED_EXPRESSION);
         Path dir = file.getParent();
@@ -158,6 +169,7 @@ public class TransferService {
         Path target = (dir == null) ? fn : dir.resolve(fn);
         Files.move(file, target);
     }
+
     public void inbound() throws IOException, URISyntaxException {
         inbound(null);
     }
@@ -180,7 +192,7 @@ public class TransferService {
 
                 try {
                     inbound(conn, remoteDir, pattern, localDir);
-                }catch(Exception e) {
+                } catch (Exception e) {
                     log.error(e.getMessage(), e);
                     MailMan.deliver();
                 }
@@ -189,27 +201,27 @@ public class TransferService {
     }
 
     // inbound means "downloading". We always look from our perspective
-   private void inbound(final Connection connection, final String remoteDir, String filter, final String localDir) throws SftpException, FileNotFoundException, JSchException {
-       log.info(">>>  reading INSIDE inbound: " );
-       log.info(">>>  REMOTE DIR: " + remoteDir);
-       log.info(">>>  LOCAL DIR: " + localDir);
-       log.info(">>>  FILTER: " + filter);
+    private void inbound(final Connection connection, final String remoteDir, String filter, final String localDir) throws SftpException, FileNotFoundException, JSchException {
+        log.info(">>>  reading INSIDE inbound: ");
+        log.info(">>>  REMOTE DIR: " + remoteDir);
+        log.info(">>>  LOCAL DIR: " + localDir);
+        log.info(">>>  FILTER: " + filter);
 
         try {
             connect(connection);
 
             String tmpLocal = localDir;
             File local = new File(tmpLocal);
-            if(!local.exists()) {
+            if (!local.exists()) {
                 local.mkdirs();
             }
-            if(!tmpLocal.endsWith("/")) {
+            if (!tmpLocal.endsWith("/")) {
                 tmpLocal += "/";
             }
 
             channelSftp.cd(remoteDir);
             Vector<ChannelSftp.LsEntry> list = channelSftp.ls(filter);
-            for(ChannelSftp.LsEntry entry : list) {
+            for (ChannelSftp.LsEntry entry : list) {
                 try {
                     String oldName = entry.getFilename();
                     String newName = oldName + COMPLETED_EXPRESSION;
@@ -219,16 +231,16 @@ public class TransferService {
                     log.info(message);
 
 
-                }catch(Exception e) {
+                } catch (Exception e) {
                     log.error(e.getMessage(), e);
                     continue;
                 }
             }
 
-        }catch(Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw e;
-        }finally {
+        } finally {
             cleanup();
         }
     }
@@ -253,15 +265,15 @@ public class TransferService {
     }
 
     private void cleanup() {
-        if(null != channelSftp) {
+        if (null != channelSftp) {
             channelSftp.exit();
             log.info("sftp Channel exited.");
         }
-        if(null != channel) {
+        if (null != channel) {
             channel.disconnect();
             log.info("Channel disconnected.");
         }
-        if(null != session) {
+        if (null != session) {
             session.disconnect();
             log.info("Host Session disconnected.");
         }

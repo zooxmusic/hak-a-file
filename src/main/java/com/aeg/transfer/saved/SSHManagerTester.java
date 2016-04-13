@@ -35,8 +35,7 @@ public class SSHManagerTester {
         SSHManager instance = new SSHManager(userName, password, connectionIP, "");
         String errorMessage = instance.connect();
 
-        if(errorMessage != null)
-        {
+        if (errorMessage != null) {
             System.out.println(errorMessage);
             System.err.println(errorMessage);
         }
@@ -47,13 +46,12 @@ public class SSHManagerTester {
         String from = "/HVAC - Files For Testing/";
         String to = "C:/AEG/TESTING/inbound/";
         File dir = new File(to);
-        if(!dir.exists()) {
+        if (!dir.exists()) {
             dir.mkdirs();
         }
         String result = instance.downloadAll(from, "*.xml", to);
         //String result = instance.sendCommand(command);
         // close only after all commands are sent
-
 
 
         instance.close();
@@ -90,8 +88,7 @@ public class SSHManagerTester {
             //log.info("File transfered successfully to host.");
         } catch (Exception ex) {
             System.out.println("Exception found while tranfer the response.");
-        }
-        finally{
+        } finally {
 
             channelSftp.exit();
             System.out.println("sftp Channel exited.");

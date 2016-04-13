@@ -8,10 +8,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SSHManager {
-    private  static final String DOWNLOAD_RECURSIVE = "scp -r %s/%s %s";
+    private static final String DOWNLOAD_RECURSIVE = "scp -r %s/%s %s";
 
 
-    private static final Logger LOGGER =    Logger.getLogger(SSHManager.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SSHManager.class.getName());
     private JSch jschSSHChannel;
     private String strUserName;
     private String strConnectionIP;
@@ -94,12 +94,13 @@ public class SSHManager {
     }
 
     public String downloadAll(String from, String filter, String to) {
-        String command = String.format(DOWNLOAD_RECURSIVE, from , filter, to);
+        String command = String.format(DOWNLOAD_RECURSIVE, from, filter, to);
         return sendCommand(command);
 
         //Vector<ChannelSftp.LsEntry> list = sftpChannel.ls(sourcePath); // List source directory structure.
 
     }
+
     public String sendCommand(String command) {
         StringBuilder outputBuffer = new StringBuilder();
 
@@ -126,7 +127,6 @@ public class SSHManager {
 
         return outputBuffer.toString();
     }
-
 
 
     public void close() {

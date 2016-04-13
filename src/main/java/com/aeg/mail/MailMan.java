@@ -12,13 +12,16 @@ public class MailMan {
     private static MailMan INSTANCE = null;
 
     private Logger log = LogManager.getLogger(MailMan.class.getName());
+
     public static void deliver() {
         getInstance().internalDeliver();
     }
 
-    private MailMan(){}
+    private MailMan() {
+    }
+
     private static MailMan getInstance() {
-        if(null == INSTANCE) {
+        if (null == INSTANCE) {
             INSTANCE = new MailMan();
         }
         return INSTANCE;

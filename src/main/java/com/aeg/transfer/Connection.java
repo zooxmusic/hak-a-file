@@ -9,13 +9,16 @@ public class Connection {
     private String username;
     private String password;
 
-    public Connection(){ }
+    public Connection() {
+    }
+
     public Connection(String host, String username, String password) {
         this.host = host;
         this.username = username;
         this.password = password;
         this.port = 22;
     }
+
     public String getHost() {
         return host;
     }

@@ -11,11 +11,15 @@ public class FileMapping {
     public static FileMapping create(String local, String remote) {
         return new FileMapping(local, remote);
     }
-    public FileMapping(){}
+
+    public FileMapping() {
+    }
+
     private FileMapping(String local, String remote) {
         this.local = local;
         this.remote = remote;
     }
+
     public void setLocal(String local) {
         this.local = local;
     }

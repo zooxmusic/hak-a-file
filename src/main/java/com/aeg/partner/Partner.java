@@ -33,6 +33,7 @@ public class Partner {
     public void setPort(int port) {
         this.port = port;
     }
+
     public void addInboundMapping(String local, String remote) {
         inboundFileMappings.add(FileMapping.create(local, remote));
     }
@@ -72,6 +73,7 @@ public class Partner {
     public void setInboundFileMappings(Collection<FileMapping> fileMappings) {
         this.inboundFileMappings = fileMappings;
     }
+
     public void setOutboundFileMappings(Collection<FileMapping> fileMappings) {
         this.outboundFileMappings = fileMappings;
     }

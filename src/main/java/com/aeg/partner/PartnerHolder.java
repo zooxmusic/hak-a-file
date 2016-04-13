@@ -2,6 +2,7 @@ package com.aeg.partner;
 
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -15,22 +16,24 @@ public class PartnerHolder {
     private static PartnerHolder INSTANCE = null;
 
     public static PartnerHolder getInstance() throws IOException, URISyntaxException {
-        if(null == INSTANCE) {
+        if (null == INSTANCE) {
             INSTANCE = new PartnerHolder();
         }
         return INSTANCE;
     }
-    private String partnersFilePath = "/partners.json";
+
+    private String partnersFilePath = "C:/AEG/config/partners.json";
     //private Path partnersJson;
 
     private PartnerHolder() throws IOException, URISyntaxException {
         read();
     }
+
     private Partners partners = null;
 
     public Partner find(String name) throws IOException, URISyntaxException {
-        for(Partner partner : partners.getPartners()) {
-            if(partner.getName().toUpperCase().equalsIgnoreCase(name.toUpperCase())) return partner;
+        for (Partner partner : partners.getPartners()) {
+            if (partner.getName().toUpperCase().equalsIgnoreCase(name.toUpperCase())) return partner;
         }
         return null;
     }
@@ -46,8 +49,12 @@ public class PartnerHolder {
         }
     }*/
     private void read() throws URISyntaxException, IOException {
+        //URL url = PartnerHolder.class.getResource(partnersFilePath);
+
+
+        File file = new File(partnersFilePath);
         URL url = PartnerHolder.class.getResource(partnersFilePath);
-        List<String> lines = Files.readAllLines(Paths.get(url.toURI()), Charset.forName("UTF-8"));
+        List<String> lines = Files.readAllLines(Paths.get(file.toURI()), Charset.forName("UTF-8"));
         StringBuilder builder = new StringBuilder();
 
         for (String line : lines) {
@@ -65,7 +72,7 @@ public class PartnerHolder {
     }*/
     private String sanitize(String original) {
         String aegHome = System.getProperty("AEG_HOME");
-        if(null == aegHome || "".equalsIgnoreCase(aegHome.trim())) {
+        if (null == aegHome || "".equalsIgnoreCase(aegHome.trim())) {
             aegHome = "C:/AEG";
         }
         return original.replaceAll("#AEG_HOME", aegHome);

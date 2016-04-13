@@ -20,8 +20,10 @@ public class PartnerDeserializer implements JsonDeserializer<Partner> {
         partner.setUsername(jsonObject.get("username").getAsString());
         partner.setPassword(jsonObject.get("password").getAsString());
 
-        Collection<FileMapping> inboundFileMappings = jsonDeserializationContext.deserialize(jsonObject.get("inboundFileMappings"), new TypeToken<Collection<FileMapping>>(){}.getType());
-        Collection<FileMapping> outboundFileMappings = jsonDeserializationContext.deserialize(jsonObject.get("outboundFileMappings"), new TypeToken<Collection<FileMapping>>(){}.getType());
+        Collection<FileMapping> inboundFileMappings = jsonDeserializationContext.deserialize(jsonObject.get("inboundFileMappings"), new TypeToken<Collection<FileMapping>>() {
+        }.getType());
+        Collection<FileMapping> outboundFileMappings = jsonDeserializationContext.deserialize(jsonObject.get("outboundFileMappings"), new TypeToken<Collection<FileMapping>>() {
+        }.getType());
         partner.setInboundFileMappings(inboundFileMappings);
         partner.setOutboundFileMappings(outboundFileMappings);
 
