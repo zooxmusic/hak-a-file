@@ -1,5 +1,6 @@
 package com.aeg;
 
+import com.aeg.partner.PartnerHolder;
 import com.aeg.transfer.TransferService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,12 +14,18 @@ import java.net.URISyntaxException;
  */
 public class AegMain {
 
+    private static String IN = "in";
+    private static String OUT = "out";
+    private static String BOTH = "both";
+
     private static Logger log = LogManager.getFormatterLogger(AegMain.class.getName());
 
     // direction (both | inbound | outbound)
     // partner, a name or code or nothing. Nothing means all
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         log.info("we ae about to embark on a great journey;");
+
+        String direction = BOTH;
         if (null == args || args.length < 1) {
             log.error("You must pass a direction as the first parameter. As either both, in or out");
             System.exit(1);
@@ -30,7 +37,7 @@ public class AegMain {
             log.info("calling transfer process for all partners");
         } else {
             name = args[1];
-            log.info("calling transfer for explict partners, I will log in the future");
+            log.info("calling transfer for explicit partners, I will log in the future");
         }
 
         AegMain main = new AegMain();
@@ -39,7 +46,8 @@ public class AegMain {
 
     }
 
-    private void transfer(String direction, String name) {
+    private void transfer(String direction, String name) throws IOException, URISyntaxException {
+        log.info("USING JSON: " + PartnerHolder.getInstance().getJson());
         if ("in".equalsIgnoreCase(direction)) {
             transferIn(name);
         } else if ("out".equalsIgnoreCase(direction)) {

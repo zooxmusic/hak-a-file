@@ -50,6 +50,7 @@ public class MailMan {
 
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("transfers@ims.com"));
+
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("bszucs@ameresco.com"));
             message.setSubject("IMS Transfer Files Failed");
             message.setText("Hey You," + "\n\n Fix your code");

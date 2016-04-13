@@ -1,14 +1,25 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
+    }
+}
+
 group 'com.aed'
 version '1.0-SNAPSHOT'
 
 apply plugin: "application"
 apply plugin: 'java'
 apply plugin: 'distribution'
+apply plugin: "com.github.johnrengelman.shadow"
 
 sourceCompatibility = 1.7
 
-
-mainClassName = "org.aeg.AegMain.class"
+mainClassName = "com.aeg.AegMain"
 applicationDefaultJvmArgs = ["-Dgreeting.language=en, -source =1.7"]
 
 task createDocs {

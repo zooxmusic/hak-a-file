@@ -1,6 +1,9 @@
 package com.aeg.partner;
 
+import com.aeg.util.FileUtil;
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+import org.apache.logging.log4j.core.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +25,8 @@ public class PartnerHolder {
         return INSTANCE;
     }
 
-    private String partnersFilePath = "C:/AEG/config/partners.json";
+    private String partnersFilePath = "E://AEG//config//partners.json";
+    private String json;
     //private Path partnersJson;
 
     private PartnerHolder() throws IOException, URISyntaxException {
@@ -38,30 +42,19 @@ public class PartnerHolder {
         return null;
     }
 
-    /*public static void main(String[] args) {
-        PartnerHolder p = new PartnerHolder();
-        try {
-            p.read();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
     private void read() throws URISyntaxException, IOException {
-        //URL url = PartnerHolder.class.getResource(partnersFilePath);
 
 
-        File file = new File(partnersFilePath);
-        URL url = PartnerHolder.class.getResource(partnersFilePath);
-        List<String> lines = Files.readAllLines(Paths.get(file.toURI()), Charset.forName("UTF-8"));
+        /*File file = new File(partnersFilePath);
+        List<String> lines = Files.readAllLines(Paths.get(file.toURI()));
         StringBuilder builder = new StringBuilder();
 
         for (String line : lines) {
             builder.append(line);
-        }
+        }*/
+        String tmp = FileUtil.readFile(partnersFilePath);
 
-        String json = sanitize(builder.toString());
+        json = sanitize(tmp);
         partners = new Gson().fromJson(json, Partners.class);
     }
 
@@ -73,13 +66,17 @@ public class PartnerHolder {
     private String sanitize(String original) {
         String aegHome = System.getProperty("AEG_HOME");
         if (null == aegHome || "".equalsIgnoreCase(aegHome.trim())) {
-            aegHome = "C:/AEG";
+            aegHome = "E:/AEG";
         }
         return original.replaceAll("#AEG_HOME", aegHome);
     }
 
     public Partners getPartners() {
         return partners;
+    }
+
+    public String getJson() {
+        return json;
     }
 
     public List<Partner> getPartnerList() {
